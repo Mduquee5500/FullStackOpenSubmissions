@@ -1,0 +1,19 @@
+sequenceDiagram
+    participant browser
+    participant server
+
+    Note over browser: The user proceeds to write a new note and clicks the "Save" button
+
+    browser->>server: POST https://studies.cs.helsinki.fi/exampleapp/new_note_spa
+    activate server
+    server-->>browser: 201 Created code is shown in the Status Code
+    deactivate server
+
+    Note right of browser: JavaScript proceeds to update the state of the SPA and UI with the new note that the user added
+
+    browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/data.json
+    activate server
+    server-->>browser: gets the updated JSON list of the notes
+    deactivate server
+
+    Note right of browser: Browser renders again the notes as the updated version without having to reload the whole page

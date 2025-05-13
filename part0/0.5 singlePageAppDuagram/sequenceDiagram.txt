@@ -1,0 +1,27 @@
+sequenceDiagram
+    participant browser
+    participant server
+
+    browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/spa
+    activate server
+    server-->>browser: Single Page App version of the HTML document
+    deactivate server
+
+    browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/main.css
+    activate server
+    server-->>browser: gets the stylesheet file "main.css"
+    deactivate server
+
+    browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/main.js
+    activate server
+    server-->>browser: gets the JavaScript file "main.js"
+    deactivate server
+
+    Note right of browser: JavaScript runs and then it gets notes in JSON format
+
+    browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/data.json
+    activate server
+    server-->>browser: gets the JSON list of notes
+    deactivate server
+
+    Note right of browser: The browser renders the notes using JavaScript
