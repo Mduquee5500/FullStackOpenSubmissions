@@ -1,4 +1,7 @@
 import { useState } from 'react'
+import AddPerson from './components/AddPerson'
+import Filter from './components/Filter'
+import PersonsForm from './components/PersonsForm'
 
 const App = () => {
    const [persons, setPersons] = useState([
@@ -11,44 +14,6 @@ const App = () => {
   const [newNumber, setNewNumber] = useState('')
   const [filter, setFilter] = useState('')
 
-  const addPerson = (event) => {
-    event.preventDefault()
-    console.log('Button clicked', event.target)
-    if (preventDuplicates(persons, newName, newNumber)) {
-      alert(newName + ' is already added to phonebook')
-      setNewName('')
-      return
-    }
-    const personObject = {
-      name: newName,
-      number: newNumber,
-    }
-    setPersons(persons.concat(personObject))
-    setNewName('')
-    setNewNumber('')
-  }
-
-  const handleNameChange = (event) => {
-    console.log(event.target.value)
-    setNewName(event.target.value)
-  }
-
-  const handleNumberChange = (event) => {
-    console.log(event.target.value)
-    setNewNumber(event.target.value)
-  }
-
-  const handleChangeFilter = (event) => {
-    console.log(event.target.value)
-    setFilter(event.target.value)
-  }
-
-  const preventDuplicates = (persons, newName, newNumber) => {
-    return persons.reduce(( exists, person ) => {
-      return exists || person.name === newName || person.number === newNumber
-    }, false)
-  }
-
   const personsToShow = filter ?
     persons.filter(person => person.name.toLowerCase().includes(filter.toLowerCase())
     ) : persons
@@ -56,27 +21,18 @@ const App = () => {
   return (
     <>
       <h2>Phonebook</h2>
-      <form>
-        Filter shown with <input onChange={handleChangeFilter}/>
-      </form>
+      <Filter filter={filter} setFilter={setFilter} />
       <h2>Add a new</h2>
-      <form onSubmit={addPerson}>
-        <div>
-          name: <input value={newName} onChange={handleNameChange} type='text' />
-        </div>
-        <div>
-          number: <input value={newNumber} onChange={handleNumberChange} type='tel' />
-        </div>
-        <div>
-          <button type="submit">add</button>
-        </div>
-      </form>
+      <AddPerson 
+        persons={persons}
+        setPersons={setPersons}
+        newName={newName}
+        setNewName={setNewName}
+        newNumber={newNumber}
+        setNewNumber={setNewNumber}
+      />
       <h2>Numbers</h2>
-      <ul style={{listStyleType: 'none'}}>
-        {personsToShow.map(( person, index ) => (
-          <li key={index}>{person.name} {person.number}</li>
-        ))}
-      </ul>
+      <PersonsForm persons={personsToShow}/>
     </>
   )
 }
