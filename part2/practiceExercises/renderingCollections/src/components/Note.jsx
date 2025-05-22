@@ -1,7 +1,12 @@
-const Note = ({ note }) => {
-  return (
-    <li>{note.content}</li>
-  )
-}
+const Note = ({ note, toggleImportace }) => {
+  const label = note.important ? "set not-important" : "set important";
 
-export default Note
+  return (
+    <>
+      <li>{note.content}</li>
+      <button onClick={toggleImportace}>{label}</button>
+    </>
+  );
+};
+
+export default Note;
