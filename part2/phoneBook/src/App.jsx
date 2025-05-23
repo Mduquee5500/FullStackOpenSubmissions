@@ -3,6 +3,7 @@ import AddPerson from "./components/AddPerson";
 import Filter from "./components/Filter";
 import PersonsForm from "./components/PersonsForm";
 import numbersServices from "./services/numbers";
+import axios from "axios";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
@@ -16,10 +17,13 @@ const App = () => {
     });
   }, []);
 
-  const deleteFromNumbers = (id) => {
-    numbersServices.deletePerson(id).then(() => {
-      setPersons(persons.filter((p) => p.id !== id));
-    });
+  const deletePerson = (id) => {
+    const personToDelete = persons.find((p) => p.id === id);
+    if (personToDelete && window.confirm(`Delete ${personToDelete.name} ?`)) {
+      axios.delete(`http://localhost:3001/persons/${id}`).then(() => {
+        setPersons((prevPersons) => prevPersons.filter((p) => p.id !== id));
+      });
+    }
   };
 
   const personsToShow = filter
@@ -42,7 +46,7 @@ const App = () => {
         setNewNumber={setNewNumber}
       />
       <h2>Numbers</h2>
-      <PersonsForm persons={personsToShow} handleDelete={deleteFromNumbers} />
+      <PersonsForm persons={personsToShow} handleDelete={deletePerson} />
     </>
   );
 };
