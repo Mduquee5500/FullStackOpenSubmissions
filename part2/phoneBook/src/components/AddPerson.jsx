@@ -1,5 +1,9 @@
 import PreventDuplicates from "./PreventDuplicates";
 import numberServices from "../services/numbers";
+import axios from "axios";
+import { useOptimistic } from "react";
+
+const baseUrl = "http://localhost:3001/persons";
 
 const AddPerson = ({
   persons,
@@ -11,10 +15,30 @@ const AddPerson = ({
 }) => {
   const handleSubmit = (event) => {
     event.preventDefault();
+    const existingPerson = persons.find((p) => p.name === newName);
     if (PreventDuplicates(persons, newName, newNumber)) {
-      alert(`${newName} is already added to phonebook`);
+      if (existingPerson) {
+        if (
+          window.confirm(
+            `${newName} is already added to phonebook, replace de old number with new one?`
+          )
+        ) {
+          const updatedPerson = { ...existingPerson, number: newNumber };
+          axios
+            .put(`${baseUrl}/${existingPerson.id}`, updatedPerson)
+            .then((response) => {
+              setPersons(
+                persons.map((p) =>
+                  p.id !== existingPerson.id ? p : response.data
+                )
+              );
+            });
+        }
+      }
+
       setNewName("");
       setNewNumber("");
+
       return;
     }
 
