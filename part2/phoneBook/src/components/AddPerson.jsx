@@ -1,7 +1,6 @@
 import PreventDuplicates from "./PreventDuplicates";
 import numberServices from "../services/numbers";
 import axios from "axios";
-import { useOptimistic } from "react";
 
 const baseUrl = "http://localhost:3001/persons";
 
