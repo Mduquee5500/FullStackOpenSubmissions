@@ -4,7 +4,7 @@ const PersonsForm = ({ persons, handleDelete }) => {
       {persons.map((person, index) => (
         <li key={index}>
           {person.name} {person.number}
-          <button onClick={() => handleDelete(person.id)}>Delete</button>
+          <button style={{ paddingLeft: '10px 20px', marginLeft: '10px' }} onClick={() => handleDelete(person.id)}>Delete</button>
         </li>
       ))}
     </ul>
