@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 
 const Weather = ({ capital }) => {
   const [weatherData, setWeatherData] = useState(null);
-  const API_KEY = "49cb73f159190872daf5d0cde2c37f71";
+  const API_KEY = "";
 
   useEffect(() => {
     if (!capital) return;
