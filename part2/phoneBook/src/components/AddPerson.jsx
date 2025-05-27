@@ -1,6 +1,8 @@
 import PreventDuplicates from "./PreventDuplicates";
 import numberServices from "../services/numbers";
 import axios from "axios";
+import Notification from "./Notification";
+import { useState } from "react";
 
 const baseUrl = "http://localhost:3001/persons";
 
@@ -11,15 +13,18 @@ const AddPerson = ({
   setNewName,
   newNumber,
   setNewNumber,
+  setNotificationMessage,
+  setNotificationStatus,
 }) => {
   const handleSubmit = (event) => {
     event.preventDefault();
     const existingPerson = persons.find((p) => p.name === newName);
+
     if (PreventDuplicates(persons, newName, newNumber)) {
       if (existingPerson) {
         if (
           window.confirm(
-            `${newName} is already added to phonebook, replace de old number with new one?`
+            `${newName} is already added to phonebook, replace the old number with the new one?`
           )
         ) {
           const updatedPerson = { ...existingPerson, number: newNumber };
@@ -31,6 +36,19 @@ const AddPerson = ({
                   p.id !== existingPerson.id ? p : response.data
                 )
               );
+              setNotificationMessage(`Updated ${newName}'s number`);
+              setNotificationStatus("successfull");
+            })
+            .catch(() => {
+              setNotificationMessage(
+                `Information of ${newName} has already been removed from server`
+              );
+              setNotificationStatus("error");
+
+              setTimeout(() => {
+                setNotificationMessage(null);
+                setNotificationStatus("");
+              }, 5000);
             });
         }
       }
@@ -46,11 +64,19 @@ const AddPerson = ({
       number: newNumber,
     };
 
-    numberServices.create(personObject).then((returnedNumber) => {
-      setPersons(persons.concat(returnedNumber));
-      setNewName("");
-      setNewNumber("");
-    });
+    numberServices
+      .create(personObject)
+      .then((returnedNumber) => {
+        setPersons(persons.concat(returnedNumber));
+        setNotificationMessage(`Added ${newName}`);
+        setNotificationStatus("successfull");
+        setNewName("");
+        setNewNumber("");
+      })
+      .catch((error) => {
+        setNotificationMessage("Failed to add person");
+        setNotificationStatus("error");
+      });
   };
 
   return (

@@ -4,12 +4,15 @@ import Filter from "./components/Filter";
 import PersonsForm from "./components/PersonsForm";
 import numbersServices from "./services/numbers";
 import axios from "axios";
+import Notification from "./components/Notification";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [filter, setFilter] = useState("");
+  const [notificationMessage, setNotificationMessage] = useState(null);
+  const [notificationStatus, setNotificationStatus] = useState("");
 
   useEffect(() => {
     numbersServices.getAll().then((initialNumbers) => {
@@ -35,6 +38,7 @@ const App = () => {
   return (
     <>
       <h2>Phonebook</h2>
+      <Notification message={notificationMessage} status={notificationStatus} />
       <Filter filter={filter} setFilter={setFilter} />
       <h2>Add a new</h2>
       <AddPerson
@@ -44,6 +48,8 @@ const App = () => {
         setNewName={setNewName}
         newNumber={newNumber}
         setNewNumber={setNewNumber}
+        setNotificationMessage={setNotificationMessage}
+        setNotificationStatus={setNotificationStatus}
       />
       <h2>Numbers</h2>
       <PersonsForm persons={personsToShow} handleDelete={deletePerson} />
