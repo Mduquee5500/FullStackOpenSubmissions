@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 
 const Weather = ({ capital }) => {
   const [weatherData, setWeatherData] = useState(null);
-  const API_KEY = "";
+  const API_KEY = import.meta.env.VITE_API_KEY;
 
   useEffect(() => {
     if (!capital) return;
