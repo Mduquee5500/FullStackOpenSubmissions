@@ -47,6 +47,32 @@ app.get('/api/persons/:id', (request, response) => {
     }
 })
 
+const generateID = () => {
+    const maxID = persons.length > 0 
+        ? Math.max(...persons.map(p => Number(p.id))) 
+        : 0
+    return String(maxID + 1)
+}
+
+app.post('/api/persons', (request, response) => {
+    const body = request.body
+    
+    if (!body.name) {
+        return response.status(400).json({
+            error: 'content missing'
+        })
+    }
+
+    const person = {
+        name: body.name,
+        number: body.number,
+        id: generateID(),
+    }
+
+    persons = persons.concat(person)
+    response.json(person)
+})
+
 app.delete('/api/persons/:id', (request, response) => {
     const id = request.params.id
     persons = persons.filter(person => person.id !== id)
