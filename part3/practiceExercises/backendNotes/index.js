@@ -23,6 +23,7 @@ app.get('/', (request, response)=> {
 })
 
 app.get('/api/notes', (request, response) => {
+    debugger
     response.json(notes)
 })
 
