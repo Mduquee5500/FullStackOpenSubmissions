@@ -1,6 +1,24 @@
 const express = require('express')
+const mongoose = require('mongoose')
 
 const app = express()
+const password = process.argv[2]
+
+const url = `mongodb+srv://mduquee5500:${password}@cluster0.igvom5b.mongodb.net/notesapp?retryWrites=true&w=majority&appName=Cluster0`
+
+mongoose.set('strictQuery', false)
+mongoose.connect(url).then(() => {
+  console.log('Connect to MongoDB')
+}).catch(error => {
+  console.log('Error connecting to MongoDB')
+})
+
+const noteSchema = new mongoose.Schema({
+  content: String,
+  important: Boolean,
+})
+
+const Note = mongoose.model('Note', noteSchema)
 
 const requestLogger = (request, response, next) => {
   console.log('Method:', request.method)
@@ -23,8 +41,9 @@ app.get('/', (request, response)=> {
 })
 
 app.get('/api/notes', (request, response) => {
-    debugger
-    response.json(notes)
+    Note.find({}).then(notes => {
+      response.json(notes)
+    })
 })
 
 app.get('/api/notes/:id', (request, response) => {
