@@ -1,8 +1,17 @@
 // Exercise 3.1
 const express = require('express');
+const morgan = require('morgan');
 const app = express()
 
+// Exercise 3.8
+morgan.token('body', function (request) {
+    return JSON.stringify(request.body);
+})
+
 app.use(express.json())
+app.use(morgan('tiny')); // Exercise 3.7
+
+
 
 let persons = [
     {
@@ -78,7 +87,7 @@ app.delete('/api/persons/:id', (request, response) => {
 })
 
 // Exercise 3.5
-app.post('/api/persons', (request, response) => {
+app.post('/api/persons', morgan(':method :url :status :res[content-length] - :response-time ms :body'), (request, response) => {
     const body = request.body;
 
     if (!body.name) {
