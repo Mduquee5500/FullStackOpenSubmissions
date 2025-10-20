@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import Note from "./components/Note";
-import noteServices from "./services/notes";
+import noteServices from "./services/notes.js";
 import Notification from "./components/Notification";
 import Footer from "./components/Footer";
 
@@ -8,7 +8,7 @@ const App = () => {
   const [notes, setNotes] = useState([]);
   const [newNote, setNewNote] = useState("");
   const [showAll, setShowAll] = useState(true);
-  const [errorMessage, setErrorMessage] = useState("some error happened...");
+  const [errorMessage, setErrorMessage] = useState(null);
 
   useEffect(() => {
     noteServices.getAll().then((initialNotes) => {
@@ -62,7 +62,9 @@ const App = () => {
   return (
     <div>
       <h1>Notes</h1>
-      <Notification message={errorMessage} />
+        {errorMessage && (
+            <Notification message={errorMessage} />
+        )}
       <div>
         <button onClick={() => setShowAll(!showAll)}>
           show {showAll ? "important" : "all"}
